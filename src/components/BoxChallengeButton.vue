@@ -17,5 +17,5 @@ onMounted(() => {
 </script>
 
 <template>
-  <div ref="container" class="w-20 h-20"></div>
+  <div ref="container" class="w-40 h-40"></div>
 </template>
