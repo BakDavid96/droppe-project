@@ -1,13 +1,14 @@
 <script setup lang="ts">
+import { ref, watch } from 'vue'
 import CountDownTimer from '../components/CountDownTimer.vue'
 import BoxItem from '../components/BoxItem.vue'
 import GreenBoxGif from '../assets/animations/green_box.gif'
 import RedBoxGif from '../assets/animations/red_box.gif'
 import YellowBoxGif from '../assets/animations/yellow_box.gif'
+import { useLocalStorage } from '../composables/useLocalStorage.ts'
 
-import { ref } from 'vue'
-
-const boxes = ref([
+// Define initial boxes data
+const initialBoxes = [
   {
     id: 'free',
     name: 'FREE BOX',
@@ -36,7 +37,43 @@ const boxes = ref([
     available: true,
     count: 3,
   },
-])
+]
+
+// Use useLocalStorage to persist box counts
+const boxCounts = useLocalStorage<{ id: string; count: number }[]>(
+  'boxCounts',
+  initialBoxes.map((box) => ({ id: box.id, count: box.count }))
+)
+
+const boxes = ref([...initialBoxes])
+
+// Sync boxes with boxCounts
+watch(
+  boxCounts,
+  (newBoxCounts) => {
+    boxes.value = initialBoxes.map((box) => {
+      const updatedBox = newBoxCounts.find((b) => b.id === box.id)
+      return updatedBox ? { ...box, count: updatedBox.count } : { ...box }
+    })
+  },
+  { deep: true }
+)
+
+const handleBuyBox = (boxId: string) => {
+  // Find the box in the `boxCounts` array and increase its count by 1
+  const box = boxCounts.value.find((b) => b.id === boxId)
+  if (box) {
+    box.count += 1
+  }
+}
+
+const handleOpenBox = (boxId: string) => {
+  // Find the box in the `boxCounts` array and decrease its count by 1
+  const box = boxCounts.value.find((b) => b.id === boxId)
+  if (box && box.count > 0) {
+    box.count -= 1
+  }
+}
 </script>
 
 <template>
@@ -65,7 +102,13 @@ const boxes = ref([
 
     <!-- Box List (Ensure z-index is higher) -->
     <div class="relative space-y-4 z-10">
-      <BoxItem v-for="box in boxes" :key="box.id" :box="box" />
+      <BoxItem
+        v-for="box in boxes"
+        :key="box.id"
+        :box="box"
+        @buy="handleBuyBox(box.id)"
+        @open="handleOpenBox(box.id)"
+      />
     </div>
   </div>
 </template>

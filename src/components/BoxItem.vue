@@ -27,12 +27,16 @@ const handleOpen = () => {
   // Simulate winning a random prize
   const prizes = ['$5', 'Free Item', 'Discount Code', '100 Coins']
   prize.value = prizes[Math.floor(Math.random() * prizes.length)]
+
+  emit('open')
 }
 
 const handleAnimationFinished = () => {
   isOpening.value = false
   showModal.value = true
 }
+
+const emit = defineEmits(['buy', 'open'])
 </script>
 
 <template>
@@ -57,6 +61,7 @@ const handleAnimationFinished = () => {
     <div class="mt-4 flex justify-between space-x-4">
       <button
         v-if="box.price > 0"
+        @click="emit('buy')"
         class="bg-[#BBEE53] text-black font-bold px-4 py-2 rounded-lg w-full sm:w-1/2"
       >
         BUY ${{ box.price.toFixed(2) }}
