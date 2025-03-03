@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import BoxBackground from '../assets/images/box_background.png'
+import OpenBoxAnimation from './OpenBoxAnimation.vue'
+import Modal from './Modal.vue'
 
 defineProps<{
   box: {
@@ -12,6 +15,24 @@ defineProps<{
     count: number
   }
 }>()
+
+const isOpening = ref(false)
+const showModal = ref(false)
+const prize = ref('✨ Surprise Reward ✨') // Default prize text
+
+const handleOpen = () => {
+  if (isOpening.value) return
+  isOpening.value = true
+
+  // Simulate winning a random prize
+  const prizes = ['$5', 'Free Item', 'Discount Code', '100 Coins']
+  prize.value = prizes[Math.floor(Math.random() * prizes.length)]
+}
+
+const handleAnimationFinished = () => {
+  isOpening.value = false
+  showModal.value = true
+}
 </script>
 
 <template>
@@ -34,7 +55,6 @@ defineProps<{
     </div>
 
     <div class="mt-4 flex justify-between space-x-4">
-      <!-- BUY BUTTON -->
       <button
         v-if="box.price > 0"
         class="bg-[#BBEE53] text-black font-bold px-4 py-2 rounded-lg w-full sm:w-1/2"
@@ -42,10 +62,10 @@ defineProps<{
         BUY ${{ box.price.toFixed(2) }}
       </button>
 
-      <!-- OPEN BUTTON -->
       <button
         v-if="box.count >= 0"
         :disabled="box.count === 0"
+        @click="handleOpen"
         :class="[
           'font-bold px-4 py-2 rounded-lg w-full sm:w-1/2',
           box.id === 'free' ? 'bg-[#BBEE53] text-black' : 'bg-white text-black',
@@ -56,4 +76,7 @@ defineProps<{
       </button>
     </div>
   </div>
+
+  <OpenBoxAnimation v-if="isOpening" @finished="handleAnimationFinished" />
+  <Modal :show="showModal" :prize="prize" @close="showModal = false" />
 </template>
