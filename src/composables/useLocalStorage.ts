@@ -6,6 +6,11 @@ export function useLocalStorage<T>(key: string, defaultValue: T) {
   const storedValue = localStorage.getItem(key)
   const value = ref<T>(storedValue ? JSON.parse(storedValue) : defaultValue)
 
+  // Ensure localStorage is set immediately on first load
+  if (!storedValue) {
+    localStorage.setItem(key, JSON.stringify(defaultValue))
+  }
+
   // Watch the value and update localStorage whenever it changes
   watch(
     value,
