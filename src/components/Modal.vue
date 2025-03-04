@@ -1,11 +1,20 @@
 <script setup lang="ts">
-defineProps<{ show: boolean; prize: string; remainingBoxes: number }>()
+import { useDayCountDown } from '../composables/useDayCountDown'
+
+defineProps<{
+  show: boolean
+  prize: string
+  remainingBoxes: number
+  id: string
+}>()
 const emit = defineEmits(['close', 'buyBox', 'startOpening'])
 
 const handleOpenAgain = () => {
   emit('startOpening')
   emit('close')
 }
+
+const countdown = useDayCountDown()
 </script>
 
 <template>
@@ -41,6 +50,12 @@ const handleOpenAgain = () => {
           class="w-full bg-white text-black border border-[#BBEE53] font-bold px-4 py-4 rounded-lg"
         >
           OPEN BOX ({{ remainingBoxes }} LEFT)
+        </button>
+        <button
+          v-else-if="remainingBoxes === 0 && id === 'free'"
+          class="font-bold px-4 py-2 rounded-lg w-full sm:w-1/2 bg-white text-black bg-opacity-50 cursor-not-allowed"
+        >
+          NEXT IN {{ countdown }}
         </button>
         <button
           v-else

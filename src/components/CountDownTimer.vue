@@ -1,28 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
 import TrophyGif from '@/assets/animations/trophy_jump.gif'
+import { useDayCountDown } from '../composables/useDayCountDown'
 
-const timeLeft = ref('')
-
-const updateTimer = () => {
-  const now = new Date()
-  const nextReset = new Date()
-  nextReset.setUTCHours(24, 0, 0, 0) // Next midnight UTC
-
-  const diff = nextReset.getTime() - now.getTime()
-  const hours = Math.floor(diff / 1000 / 60 / 60)
-  const minutes = Math.floor((diff / 1000 / 60) % 60)
-  const seconds = Math.floor((diff / 1000) % 60)
-
-  timeLeft.value = `${hours.toString().padStart(2, '0')}:${minutes
-    .toString()
-    .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-}
-
-onMounted(() => {
-  updateTimer()
-  setInterval(updateTimer, 1000)
-})
+const timeLeft = useDayCountDown()
 </script>
 
 <template>

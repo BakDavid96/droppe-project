@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import BoxBackground from '../assets/images/box_background.png'
 import OpenBoxAnimation from './OpenBoxAnimation.vue'
+import { useDayCountDown } from '../composables/useDayCountDown'
 import Modal from './Modal.vue'
 
 defineProps<{
@@ -19,6 +20,7 @@ defineProps<{
 const isOpening = ref(false)
 const showModal = ref(false)
 const prize = ref('✨ Surprise Reward ✨') // Default prize text
+const countdown = useDayCountDown()
 
 const emit = defineEmits(['buy', 'open'])
 
@@ -68,16 +70,32 @@ const handleAnimationFinished = () => {
       </button>
 
       <button
-        v-if="box.count >= 0"
+        v-if="box.id === 'free' && box.count === 0"
+        disabled
+        class="font-bold px-4 py-2 rounded-lg w-full sm:w-1/2 bg-white text-black bg-opacity-50 cursor-not-allowed"
+      >
+        NEXT IN {{ countdown }}
+      </button>
+
+      <button
+        v-else-if="box.count > 0 && box.id === 'free'"
+        @click="handleOpen"
+        class="font-bold px-4 py-2 rounded-lg w-full sm:w-1/2 bg-[#BBEE53] text-black"
+      >
+        OPEN FREE BOX
+      </button>
+
+      <button
+        v-else-if="box.count >= 0"
         :disabled="box.count === 0"
         @click="handleOpen"
         :class="[
           'font-bold px-4 py-2 rounded-lg w-full sm:w-1/2',
-          box.id === 'free' ? 'bg-[#BBEE53] text-black' : 'bg-white text-black',
+          'bg-white text-black',
           box.count === 0 ? 'bg-opacity-50 cursor-not-allowed' : '',
         ]"
       >
-        {{ box.id === 'free' ? 'OPEN FREE BOX' : `OPEN | ${box.count}` }}
+        {{ `OPEN | ${box.count}` }}
       </button>
     </div>
   </div>
@@ -87,6 +105,7 @@ const handleAnimationFinished = () => {
     :show="showModal"
     :prize="prize"
     :remainingBoxes="box.count"
+    :id="box.id"
     @close="showModal = false"
     @startOpening="handleOpen"
     @buyBox="emit('buy')"
