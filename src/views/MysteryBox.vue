@@ -3,6 +3,7 @@ import { ref, watch } from 'vue'
 import CountDownTimer from '../components/CountDownTimer.vue'
 import BoxItem from '../components/BoxItem.vue'
 import PurchaseModal from '../components/PurchaseModal.vue'
+import TrophyModal from '../components/TrophyModal.vue'
 import GreenBoxGif from '../assets/animations/green_box.gif'
 import RedBoxGif from '../assets/animations/red_box.gif'
 import YellowBoxGif from '../assets/animations/yellow_box.gif'
@@ -48,6 +49,7 @@ const boxCounts = useLocalStorage<{ id: string; count: number }[]>(
 
 const boxes = ref([...initialBoxes])
 const showPurchaseModal = ref(false)
+const showTrophyModal = ref(false)
 
 watch(
   boxCounts,
@@ -94,7 +96,7 @@ const handleOpenBox = (boxId: string) => {
       <p class="text-sm text-400 opacity-70">
         Unlock surprises that boost your journey
       </p>
-      <CountDownTimer />
+      <CountDownTimer @click="showTrophyModal = true" />
     </div>
 
     <div class="relative space-y-4 z-10">
@@ -112,5 +114,6 @@ const handleOpenBox = (boxId: string) => {
       :show="showPurchaseModal"
       @close="showPurchaseModal = false"
     />
+    <TrophyModal v-if="showTrophyModal" @close="showTrophyModal = false" />
   </div>
 </template>
