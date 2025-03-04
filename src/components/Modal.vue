@@ -1,6 +1,11 @@
 <script setup lang="ts">
-defineProps<{ show: boolean; prize: string }>()
-const emit = defineEmits(['close'])
+defineProps<{ show: boolean; prize: string; remainingBoxes: number }>()
+const emit = defineEmits(['close', 'buyBox', 'startOpening'])
+
+const handleOpenAgain = () => {
+  emit('startOpening')
+  emit('close')
+}
 </script>
 
 <template>
@@ -28,13 +33,21 @@ const emit = defineEmits(['close'])
         <span class="text-lg font-semibold">{{ prize }}</span>
       </div>
 
-      <!-- Buttons (Stacked Layout) -->
+      <!-- Dynamic Button Logic -->
       <div class="mt-6 space-y-3">
         <button
-          @click="emit('close')"
+          v-if="remainingBoxes > 0"
+          @click="handleOpenAgain"
           class="w-full bg-white text-black border border-[#BBEE53] font-bold px-4 py-4 rounded-lg"
         >
-          BUY MORE BOXES
+          OPEN BOX ({{ remainingBoxes }} LEFT)
+        </button>
+        <button
+          v-else
+          @click="emit('buyBox')"
+          class="w-full bg-white text-black border border-[#BBEE53] font-bold px-4 py-4 rounded-lg"
+        >
+          BUY BOX
         </button>
         <button
           @click="emit('close')"

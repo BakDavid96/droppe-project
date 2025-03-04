@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue'
 import CountDownTimer from '../components/CountDownTimer.vue'
 import BoxItem from '../components/BoxItem.vue'
+import PurchaseModal from '../components/PurchaseModal.vue'
 import GreenBoxGif from '../assets/animations/green_box.gif'
 import RedBoxGif from '../assets/animations/red_box.gif'
 import YellowBoxGif from '../assets/animations/yellow_box.gif'
@@ -46,8 +47,8 @@ const boxCounts = useLocalStorage<{ id: string; count: number }[]>(
 )
 
 const boxes = ref([...initialBoxes])
+const showPurchaseModal = ref(false)
 
-// Sync boxes with boxCounts
 watch(
   boxCounts,
   (newBoxCounts) => {
@@ -60,15 +61,14 @@ watch(
 )
 
 const handleBuyBox = (boxId: string) => {
-  // Find the box in the `boxCounts` array and increase its count by 1
   const box = boxCounts.value.find((b) => b.id === boxId)
   if (box) {
     box.count += 1
   }
+  showPurchaseModal.value = true
 }
 
 const handleOpenBox = (boxId: string) => {
-  // Find the box in the `boxCounts` array and decrease its count by 1
   const box = boxCounts.value.find((b) => b.id === boxId)
   if (box && box.count > 0) {
     box.count -= 1
@@ -77,11 +77,9 @@ const handleOpenBox = (boxId: string) => {
 </script>
 
 <template>
-  <!-- Ensure the main container is relative -->
   <div
     class="relative min-h-screen bg-black text-white px-4 py-6 overflow-hidden"
   >
-    <!-- Blurred Ellipses (Background) -->
     <div class="absolute inset-0">
       <div
         class="absolute top-[-100px] left-[-120px] w-[500px] h-[250px] bg-[#dd4545] blur-[53px] max-w-full"
@@ -91,7 +89,6 @@ const handleOpenBox = (boxId: string) => {
       ></div>
     </div>
 
-    <!-- Title & Countdown (Ensure z-index is higher) -->
     <div class="relative text-center mb-6 z-10">
       <h1 class="text-2xl font-bold">MYSTERY BOXES</h1>
       <p class="text-sm text-400 opacity-70">
@@ -100,7 +97,6 @@ const handleOpenBox = (boxId: string) => {
       <CountDownTimer />
     </div>
 
-    <!-- Box List (Ensure z-index is higher) -->
     <div class="relative space-y-4 z-10">
       <BoxItem
         v-for="box in boxes"
@@ -110,5 +106,11 @@ const handleOpenBox = (boxId: string) => {
         @open="handleOpenBox(box.id)"
       />
     </div>
+
+    <!-- Success Modal for Purchasing a Box -->
+    <PurchaseModal
+      :show="showPurchaseModal"
+      @close="showPurchaseModal = false"
+    />
   </div>
 </template>

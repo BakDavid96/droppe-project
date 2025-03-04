@@ -20,6 +20,8 @@ const isOpening = ref(false)
 const showModal = ref(false)
 const prize = ref('✨ Surprise Reward ✨') // Default prize text
 
+const emit = defineEmits(['buy', 'open'])
+
 const handleOpen = () => {
   if (isOpening.value) return
   isOpening.value = true
@@ -35,8 +37,6 @@ const handleAnimationFinished = () => {
   isOpening.value = false
   showModal.value = true
 }
-
-const emit = defineEmits(['buy', 'open'])
 </script>
 
 <template>
@@ -83,5 +83,12 @@ const emit = defineEmits(['buy', 'open'])
   </div>
 
   <OpenBoxAnimation v-if="isOpening" @finished="handleAnimationFinished" />
-  <Modal :show="showModal" :prize="prize" @close="showModal = false" />
+  <Modal
+    :show="showModal"
+    :prize="prize"
+    :remainingBoxes="box.count"
+    @close="showModal = false"
+    @startOpening="handleOpen"
+    @buyBox="emit('buy')"
+  />
 </template>
