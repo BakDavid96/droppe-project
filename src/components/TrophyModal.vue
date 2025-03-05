@@ -29,6 +29,15 @@ const leaderboard = ref([
     selected: true,
   },
   { id: 7, name: 'Frank', score: 850, image: profile, ribbon: '' },
+  { id: 8, name: 'Grace', score: 820, image: profile, ribbon: '' },
+  { id: 9, name: 'Hank', score: 800, image: profile, ribbon: '' },
+  { id: 10, name: 'Ivy', score: 780, image: profile, ribbon: '' },
+  { id: 11, name: 'Jack', score: 760, image: profile, ribbon: '' },
+  { id: 12, name: 'Kate', score: 740, image: profile, ribbon: '' },
+  { id: 13, name: 'Leo', score: 720, image: profile, ribbon: '' },
+  { id: 14, name: 'Mia', score: 700, image: profile, ribbon: '' },
+  { id: 15, name: 'Noah', score: 680, image: profile, ribbon: '' },
+  { id: 16, name: 'Olivia', score: 660, image: profile, ribbon: '' },
 ])
 
 const filteredLeaderboard = computed(() => leaderboard.value)
@@ -44,9 +53,9 @@ const filteredLeaderboard = computed(() => leaderboard.value)
       <!-- Close Button (Top Right) -->
       <button
         @click="emit('close')"
-        class="absolute top-0 right-0 text-white bg-[#FF0000] text-lg font-bold rounded-full w-6 h-6 flex items-center justify-center z-10"
+        class="absolute -top-2 -right-1 text-white bg-[#FF0000] rounded-full w-6 h-6 flex items-center justify-center z-10"
       >
-        x
+        X
       </button>
       <!-- Trophy Animation (Moved Up) -->
       <img
@@ -73,7 +82,9 @@ const filteredLeaderboard = computed(() => leaderboard.value)
       />
 
       <!-- Leaderboard -->
-      <div class="mt-4 bg-black rounded-lg h-full overflow-y-auto">
+      <div
+        class="mt-4 bg-black rounded-lg h-full overflow-y-auto custom-scroll"
+      >
         <!-- Title -->
         <h2 class="text-center text-xl font-bold text-white mt-12 relative">
           Box Challenge
@@ -131,7 +142,9 @@ const filteredLeaderboard = computed(() => leaderboard.value)
           :key="user.id"
           :class="[
             'flex items-center p-1 w-full  border-[1px] bg-[#1C1C1E] rounded-lg mt-3',
-            user?.selected ? 'border-[#BBEE53]' : 'border-[#1C1C1E]',
+            user?.selected
+              ? 'border-[#BBEE53] sticky bottom-0'
+              : 'border-[#1C1C1E]',
           ]"
         >
           <!-- Placement Number -->
@@ -158,3 +171,9 @@ const filteredLeaderboard = computed(() => leaderboard.value)
     </div>
   </div>
 </template>
+<style>
+/* Hide Scrollbar */
+.custom-scroll::-webkit-scrollbar {
+  display: none;
+}
+</style>
