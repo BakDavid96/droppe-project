@@ -8,6 +8,7 @@ import memeCoinHeader from '../assets/images/meme_coin_header.png'
 import stars from '../assets/images/stars.png'
 import profile from '../assets/images/profile.png'
 import { useDayCountDown } from '../composables/useDayCountDown'
+import BadgeResultModal from './BadgeResultModal.vue' // Import the Badge Win/Loss Modal
 
 const emit = defineEmits(['close'])
 
@@ -41,6 +42,16 @@ const leaderboard = ref([
 ])
 
 const filteredLeaderboard = computed(() => leaderboard.value)
+
+// Modal Logic
+const showBadgeModal = ref(false)
+const userWon = ref(false)
+
+const checkIfYouWon = () => {
+  // Randomly determine if user won (50% chance)
+  userWon.value = Math.random() < 0.5
+  showBadgeModal.value = true
+}
 </script>
 
 <template>
@@ -50,21 +61,22 @@ const filteredLeaderboard = computed(() => leaderboard.value)
     <div
       class="relative w-[90vw] h-[70vh] bg-black rounded-xl p-6 shadow-xl border-2 border-green-500/30 backdrop-blur-md"
     >
-      <!-- Close Button (Top Right) -->
+      <!-- Close Button -->
       <button
         @click="emit('close')"
         class="absolute -top-2 -right-1 text-white bg-[#FF0000] rounded-full w-6 h-6 flex items-center justify-center z-10"
       >
         X
       </button>
-      <!-- Trophy Animation (Moved Up) -->
+
+      <!-- Trophy Animation -->
       <img
         :src="trophyAnimation"
         alt="Trophy Animation"
         class="w-[9em] h-[9em] mx-auto absolute -top-16 left-1/2 transform -translate-x-1/2 z-20"
       />
 
-      <!-- Gradient Background (Fading Bottom) -->
+      <!-- Gradient Background -->
       <div
         class="absolute top-0 left-0 w-full h-40 rounded-t-xl bg-gradient-to-b from-[#8EB979] via-[#679A96] to-transparent"
       ></div>
@@ -92,6 +104,7 @@ const filteredLeaderboard = computed(() => leaderboard.value)
 
         <!-- Check If You Won Button -->
         <button
+          @click="checkIfYouWon"
           class="mt-4 text-black py-2 px-6 rounded-lg w-full relative"
           style="
             background: linear-gradient(
@@ -132,16 +145,18 @@ const filteredLeaderboard = computed(() => leaderboard.value)
           </button>
         </div>
 
-        <!-- Countdown Timer (Below Buttons, Green Text) -->
+        <!-- Countdown Timer -->
         <div class="text-center text-[#BBEE53] text-sm mt-2 mb-2 float-right">
           Resets in {{ countdown }}
         </div>
+
         <br />
+
         <div
           v-for="user in filteredLeaderboard"
           :key="user.id"
           :class="[
-            'flex items-center p-1 w-full  border-[1px] bg-[#1C1C1E] rounded-lg mt-3',
+            'flex items-center p-1 w-full border-[1px] bg-[#1C1C1E] rounded-lg mt-3',
             user?.selected
               ? 'border-[#BBEE53] sticky bottom-0'
               : 'border-[#1C1C1E]',
@@ -152,7 +167,7 @@ const filteredLeaderboard = computed(() => leaderboard.value)
             `${user.id}.`
           }}</span>
 
-          <!-- Profile Image & Name (Shifted Left) -->
+          <!-- Profile Image & Name -->
           <div class="flex items-center space-x-3 flex-1">
             <img
               :src="user.image"
@@ -170,6 +185,13 @@ const filteredLeaderboard = computed(() => leaderboard.value)
       </div>
     </div>
   </div>
+
+  <!-- Badge Win/Loss Modal -->
+  <BadgeResultModal
+    v-if="showBadgeModal"
+    :won="userWon"
+    @close="showBadgeModal = false"
+  />
 </template>
 <style>
 /* Hide Scrollbar */
