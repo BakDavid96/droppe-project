@@ -1,5 +1,5 @@
 {
-  "name": "vite-vue-typescript-starter",
+  "name": "droppe-project",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,6 +8,7 @@
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview"
   },
+  "homepage": "https://BakDavid96.github.io/droppe-project",
   "dependencies": {
     "@tsparticles/confetti": "^3.8.1",
     "lottie-web": "^5.12.2",
