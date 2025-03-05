@@ -23,7 +23,7 @@ const countdown = useDayCountDown()
     class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50 top-[-20px]"
   >
     <div
-      class="relative bg-black p-6 rounded-lg text-center shadow-lg w-96 border-[1px] border-white"
+      class="relative bg-black p-6 rounded-xl text-center shadow-lg border-[1px] border-white w-[90vw]"
     >
       <!-- Close Button -->
       <button
@@ -62,7 +62,7 @@ const countdown = useDayCountDown()
           @click="emit('buyBox')"
           class="w-full bg-white text-black border border-[#BBEE53] font-bold px-4 py-4 rounded-lg"
         >
-          BUY BOX
+          BUY MORE BOXES
         </button>
         <button
           @click="emit('close')"

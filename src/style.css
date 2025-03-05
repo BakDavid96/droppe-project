@@ -5,3 +5,6 @@
 body {
   font-family: 'Space Grotesk', sans-serif;
 }
+canvas {
+  pointer-events: none !important;
+}

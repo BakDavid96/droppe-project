@@ -10,7 +10,7 @@ const emit = defineEmits(['close'])
     class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50 top-[-20px]"
   >
     <div
-      class="relative bg-black p-6 rounded-xl text-center shadow-lg w-96 border-[1px] border-white"
+      class="relative bg-black p-6 rounded-xl text-center shadow-lg w-[90vw] border-[1px] border-white"
     >
       <!-- Close Button -->
       <button
